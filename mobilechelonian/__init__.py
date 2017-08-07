@@ -24,9 +24,9 @@ class Turtle(widgets.DOMWidget):
     OFFSET = 20
     def __init__(self):
         '''Create a Turtle.
-        
+
         Example::
-        
+
             t = Turtle()
         '''
         super(Turtle, self).__init__()
@@ -43,7 +43,7 @@ class Turtle(widgets.DOMWidget):
         '''Put down the pen. Turtles start with their pen down.
 
         Example::
-        
+
             t.pendown()
         '''
         self.pen = 1
@@ -52,7 +52,7 @@ class Turtle(widgets.DOMWidget):
         '''Lift up the pen.
 
         Example::
-        
+
             t.penup()
         '''
         self.pen = 0
@@ -61,7 +61,7 @@ class Turtle(widgets.DOMWidget):
         '''Change the speed of the turtle (range 1-10).
 
         Example::
-        
+
             t.speed(10) # Full speed
         '''
         self.speedVar = min(max(1, speed), 10)
@@ -70,19 +70,19 @@ class Turtle(widgets.DOMWidget):
         '''Turn the Turtle num degrees to the right.
 
         Example::
-        
+
             t.right(90)
         '''
         self.bearing += num
         self.bearing = self.bearing%360
-        self.b_change = num   
+        self.b_change = num
         self._add_point()
 
     def left(self, num):
         '''Turn the Turtle num degrees to the left.
 
         Example::
-        
+
             t.left(90)
         '''
         self.bearing -= num
@@ -92,7 +92,7 @@ class Turtle(widgets.DOMWidget):
 
     def towards(self, x, y):
         '''Get the heading required to turn the turtle towards the point (x, y)
-        
+
         Example:
             t.home() # position (200, 200)
             t.towards(300, 100) # -> 45
@@ -100,26 +100,24 @@ class Turtle(widgets.DOMWidget):
         a = x - self.posX
         b = y - self.posY
         return (math.degrees(math.atan2(b, a)) + 90) % 360
-        
+
+    def _clamp(pos):
+        LARGE_BOUND = Turtle.SIZE - Turtle.OFFSET
+        SMALL_BOUND = Turtle.OFFSET
+        return min(LARGE_BOUND, max(SMALL_BOUND, pos))
+
     def forward(self, num):
         '''Move the Turtle forward by num units.
 
         Example:
-        
+
             t.forward(100)
         '''
         self.posX += round(num * math.sin(math.radians(self.bearing)), 1)
         self.posY -= round(num * math.cos(math.radians(self.bearing)), 1)
 
-        if self.posX < Turtle.OFFSET:
-            self.posX = Turtle.OFFSET
-        if self.posY < Turtle.OFFSET:
-            self.posY = Turtle.OFFSET
-
-        if self.posX > Turtle.SIZE - Turtle.OFFSET:
-            self.posX = Turtle.SIZE - Turtle.OFFSET
-        if self.posY > Turtle.SIZE - Turtle.OFFSET:
-            self.posY = Turtle.SIZE - Turtle.OFFSET
+        self.posX = Turtle._clamp(self.posX)
+        self.posY = Turtle._clamp(self.posY)
 
         self.b_change = 0
         self._add_point()
@@ -128,21 +126,14 @@ class Turtle(widgets.DOMWidget):
         '''Move the Turtle backward by num units.
 
         Example::
-        
+
             t.backward(100)
         '''
         self.posX -= round(num * math.sin(math.radians(self.bearing)), 1)
         self.posY += round(num * math.cos(math.radians(self.bearing)), 1)
 
-        if self.posX < Turtle.OFFSET:
-            self.posX = Turtle.OFFSET
-        if self.posY < Turtle.OFFSET:
-            self.posY = Turtle.OFFSET
-
-        if self.posX > Turtle.SIZE - Turtle.OFFSET:
-            self.posX = Turtle.SIZE - Turtle.OFFSET
-        if self.posY > Turtle.SIZE - Turtle.OFFSET:
-            self.posY = Turtle.SIZE - Turtle.OFFSET
+        self.posX = Turtle._clamp(self.posX)
+        self.posY = Turtle._clamp(self.posY)
 
         self.b_change = 0
         self._add_point()
@@ -151,7 +142,7 @@ class Turtle(widgets.DOMWidget):
         '''Change the color of the pen to color. Default is black.
 
         Example::
-        
+
             t.pencolor("red")
         '''
         self.color = color
@@ -162,20 +153,20 @@ class Turtle(widgets.DOMWidget):
 
     def circle(self, radius, extent=360):
         """Draw a circle, or part of a circle.
-        
+
         From its current position, the turtle will draw a series of short lines,
         turning slightly between each. If radius is positive, it will turn to
         its left; a negative radius will make it turn to its right.
-        
+
         Example::
-        
+
             t.circle(50)
         """
         temp = self.bearing
         self.b_change = 0;
         tempSpeed = self.speedVar
         self.speedVar = 1
-        
+
         for i in range(0, (extent//2)):
             n = math.fabs(math.radians(self.b_change) * radius)
             if(radius >= 0):
@@ -194,7 +185,7 @@ class Turtle(widgets.DOMWidget):
         '''Move the Turtle to its home position.
 
         Example::
-        
+
             t.home()
         '''
         self.posX = 200
