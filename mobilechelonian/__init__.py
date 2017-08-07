@@ -90,6 +90,17 @@ class Turtle(widgets.DOMWidget):
         self.b_change = -num
         self._add_point()
 
+    def towards(self, x, y):
+        '''Get the heading required to turn the turtle towards the point (x, y)
+        
+        Example:
+            t.home() # position (200, 200)
+            t.towards(300, 100) # -> 45
+        '''
+        a = x - self.posX
+        b = y - self.posY
+        return (math.degrees(math.atan2(b, a)) + 90) % 360
+        
     def forward(self, num):
         '''Move the Turtle forward by num units.
 
