@@ -138,6 +138,12 @@ class Turtle(widgets.DOMWidget):
         self.b_change = 0
         self._add_point()
 
+    def goto(self, x, y):
+        self.posX = Turtle._clamp(x)
+        self.posY = Turtle._clamp(y)
+        self.b_change = 0
+        self._add_point()
+
     def pencolor(self, color):
         '''Change the color of the pen to color. Default is black.
 
