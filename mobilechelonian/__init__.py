@@ -153,8 +153,38 @@ class Turtle(widgets.DOMWidget):
         '''
         self.color = color
 
+    def setposition(self, x, y, bearing=None):
+        """Change the position of the turtle.
+
+        Example::
+
+            t.setposition(100, 100)
+        """
+        self.posX = x
+        self.posY = y
+        if bearing is None:
+            self._add_point()
+        elif isinstance(bearing, int):
+            self.setbearing(bearing)
+        else:
+            raise ValueError("Bearing must be an integer")
+
+    def setbearing(self, bearing):
+        """Change the bearing (angle) of the turtle.
+
+        Example::
+
+            t.setbearing(180)
+        """
+        diff = self.bearing - bearing
+        self.b_change = diff
+        self.bearing = bearing
+        self._add_point()
+        self.b_change = 0
+
     def _add_point(self):
-        p = dict(p=self.pen, lc=self.color, x=self.posX, y=self.posY, b=self.b_change, s=self.speedVar)
+        p = dict(p=self.pen, lc=self.color, x=self.posX, y=self.posY,
+                 b=self.b_change, s=self.speedVar)
         self.points = self.points + [p]
 
     def circle(self, radius, extent=360):
